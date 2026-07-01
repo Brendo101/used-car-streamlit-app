@@ -3,24 +3,18 @@ import pandas as pd
 import plotly.express as px
 from utils.data_loader import load_and_clean_data
 
-# -----------------------
 # PAGE CONFIG
-# -----------------------
 st.set_page_config(
     page_title="Used Car Market Explorer",
     layout="wide"
 )
 
-# -----------------------
 # LOAD DATA
-# -----------------------
 df = load_and_clean_data("data/cars.csv")
 
 st.title("🚗 Used Car Market Explorer")
 
-# -----------------------
 # BASIC SAFETY CHECK
-# -----------------------
 st.sidebar.subheader("Data Quality Check")
 
 st.sidebar.write({
@@ -31,9 +25,7 @@ st.sidebar.write({
     "missing_model": df["model"].isna().sum(),
 })
 
-# -----------------------
 # SIDEBAR FILTERS
-# -----------------------
 st.sidebar.header("Filters")
 
 # Make filter
@@ -81,9 +73,7 @@ mileage_range = st.sidebar.slider(
     (mileage_min, mileage_max)
 )
 
-# -----------------------
 # APPLY FILTERS
-# -----------------------
 filtered = df.copy()
 
 if make != "All":
@@ -101,9 +91,7 @@ filtered = filtered[
     (filtered["mileage"] <= mileage_range[1])
 ]
 
-# -----------------------
 # KPIs
-# -----------------------
 st.subheader("Overview")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -125,15 +113,11 @@ col4.metric(
     int(filtered["year"].mean()) if len(filtered) > 0 else "N/A"
 )
 
-# -----------------------
 # DEAL SCORE (simple heuristic)
-# -----------------------
 filtered = filtered.copy()
 filtered["deal_score"] = filtered["price"] / (filtered["mileage"] + 1)
 
-# -----------------------
 # PRICE DISTRIBUTION CHART
-# -----------------------
 st.subheader("Price Distribution")
 
 if len(filtered) > 0:
@@ -147,9 +131,7 @@ if len(filtered) > 0:
 else:
     st.warning("No data available for selected filters.")
 
-# -----------------------
 # BEST DEALS
-# -----------------------
 st.subheader("Best Value Listings")
 
 if len(filtered) > 0:
@@ -164,9 +146,7 @@ if len(filtered) > 0:
 else:
     st.info("No listings available.")
 
-# -----------------------
 # FULL RESULTS TABLE
-# -----------------------
 st.subheader(f"All Results ({len(filtered)})")
 
 st.dataframe(
